@@ -156,10 +156,10 @@ class Program{
         }
         else {
             Console.WriteLine("You lose!!");
-            Console.WriteLine($"Your final networth of ${finalWorth} was was than the starting networth of $1,000.");
+            Console.WriteLine($"Your final networth of ${finalWorth} was less than the starting networth of $1,000.");
         }
 
-        Console.WriteLine($"Highscore: {highscore}");
+        Console.WriteLine($"Highscore: ${highscore}");
 
         Console.WriteLine($"Press R to play again and try to beat your net worth or Q to quit.");
         Console.WriteLine("----------------------------------------");
