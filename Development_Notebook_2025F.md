@@ -178,74 +178,74 @@ Complete but need to add error catching for non number entries
 
 - **Iteration 10:**  
   - **Goal/Task/Rationale:**  
-      
+      Fix issues with the game looping without input
       
   - **What do you do?**   
     {If you ask AI, provide your prompt and link. If you fix it yourself, describe how you do it.}  
-       
+       I included the UpdatePrices() and StatsUI() method in each key press switch instead of calling it at the start of the while (gameRunning) loop
       
 - **Response/Result:**
-
+  The game no longer just continues on without input
 
   
 
 - **Your Evaluation:** {Issues/errors/your decision:done/discard/revise prompt}
 
-
+IT WORKS
 
 
 - **Iteration 11:**  
   - **Goal/Task/Rationale:**  
       
-      
+      Implement win/lose feature
   - **What do you do?**   
     {If you ask AI, provide your prompt and link. If you fix it yourself, describe how you do it.}  
        
-      
+      I added if your final worth was higher than 1000 you won but if not you lose
 - **Response/Result:**
-
+  You can now win or lose 
 
   
 
 - **Your Evaluation:** {Issues/errors/your decision:done/discard/revise prompt}
 
-
+DOne
 
 
 - **Iteration 12:**  
   - **Goal/Task/Rationale:**  
-      
+      Add high score feature
       
   - **What do you do?**   
     {If you ask AI, provide your prompt and link. If you fix it yourself, describe how you do it.}  
-       
+       I added a highscore feature. If it's your first time playing, you don't get notified you have a new high score. However, if it isnt and you get a new high score, you get told you have a new high score
       
 - **Response/Result:**
-
+High score feature works
 
   
 
 - **Your Evaluation:** {Issues/errors/your decision:done/discard/revise prompt}
-
+Done
 
 
 
 - **Iteration 13:**  
   - **Goal/Task/Rationale:**  
-      
+      Fix game not restarting after completing it bug
       
   - **What do you do?**   
     {If you ask AI, provide your prompt and link. If you fix it yourself, describe how you do it.}  
-       
+       I realized the issue occurred from the fact that the while (gameRunning) doesnt start again. I created a method for the game play and then wrapped it in a while(true) loop in main.
       
 - **Response/Result:**
 
 
-  
+  You can now reset the game after finishing
 
 - **Your Evaluation:** {Issues/errors/your decision:done/discard/revise prompt}
 
-
+Done
 
 
 - **Iteration 14:**  

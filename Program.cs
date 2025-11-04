@@ -13,18 +13,18 @@ class Program{
     static Random rand = new Random();
     static int prevCash, prevStocks, prevNetWorth;
     static int num;
+    static int highscore = 0;
 
-    static void IntroScreen()
-    {
-        Console.Clear();
+    static void IntroScreen(){
         Console.WriteLine(@"
                                                         Welcome to C(onsumerism) Sharp Market!
                             --------------------------------------------------------------------------------------------------
                                         You are a stock market trader watching live stock market prices.
                                 Your goal is to maximize profit before the trading day ends at 4pm without insider trading.
-                                                        Prices change every few seconds. 
+                                                                    
                                                 Buy when prices are low, sell when prices are high. 
                                               Watch out! Stocks can randomly crash or spike in price. 
+                                         If you end the day with a lower net worth than you started, you LOSE!
                                                    
                                                                      Controls:
                                                                       B - Buy
@@ -37,16 +37,16 @@ class Program{
                                                       Press any key to open up Sharp Street
                                                               
         ");
-        while (true)
-        {
+        /*while (true){
+            ConsoleKey key = Console.ReadKey(true).Key;
             if (Console.KeyAvailable) { break; }
-        }
+        }*/
+        Console.ReadKey(true);
+        
     }
 
     static void StatsUI(){
         int netWorth = cash + (stocks * price);
-        Console.Clear();
-        Console.WriteLine("[B] - Buy [S] - Sell [N] - Skip/Wait One Tick [R] - Restart [ESC] - Pause [Q] - Quit");
         Console.WriteLine("----------------------------------------");
         if (time >= 720){
             if (time < 780) { Console.WriteLine($"Time: 	12:{time % 60:D2}PM"); }
@@ -55,12 +55,14 @@ class Program{
         else { Console.WriteLine($"Time: {(time / 60 % 12)}:{time % 60:D2}AM"); }
         Console.WriteLine($"Money: ${cash}");
         Console.WriteLine($"Stocks Owned: {stocks}");
-        Console.WriteLine($"Current Price: %{price}");
+        //Console.WriteLine($"Current Price: ${price}");
         Console.WriteLine($"Net Worth: ${netWorth}");
         Console.WriteLine("----------------------------------------");
+        Console.WriteLine("[B] - Buy [S] - Sell [N] - Skip [R] - Restart [ESC] - Pause [Q] - Quit");
     }
 
     static void UpdateStockPrice(){
+        Console.Clear();
         int change = rand.Next(-10, 11);
         price += change;
         if (price < 1) { price = 1; }
@@ -73,10 +75,18 @@ class Program{
 
         else if (chaoticEventChance == 2) {
             int drop = rand.Next(20, 40);
-            price -= drop;
+            if (drop > price) {
+                Console.WriteLine($"Stock Prices Crashed!!");
+                price = 1;
+            }
+            else {
+                price -= drop;
             Console.WriteLine($"Stock Prices Crashed!! They decreased by ${drop}.");
+            }
+            
         }
-        else {Console.WriteLine($"Stock prices are now {price}.");}
+        Console.WriteLine($"Stock prices are now {price}.");
+        Thread.Sleep(1000);
     }
 
     static void PauseScreen() {
@@ -100,10 +110,11 @@ class Program{
         cash = 1000;
         stocks = 0;
         time = 420;
-        IntroScreen();
+        //IntroScreen();
+        GamePlay();
     }
 
-    static void EndScreen(){
+    static void EndScreen() {
         int finalWorth = cash + (stocks * price);
         Console.WriteLine("----------------------------------------");
         Console.WriteLine("Time: 4:00pm");
@@ -112,31 +123,48 @@ class Program{
         Console.WriteLine($"Final Cash: ${cash}");
         Console.WriteLine($"Stocks Owned: {stocks}");
         Console.WriteLine($"Net Worth: ${finalWorth}");
+        if (highscore > 0) {
+            if (highscore < finalWorth) {
+                Console.WriteLine("You got a new highscore!");
+                highscore = finalWorth;
+            }
+        }
+        else { highscore = finalWorth; }
 
-        if (prevGame){
+        if (prevGame) {
             Console.WriteLine("----------------------------------------");
             Console.WriteLine("Previous Attempt Stats:");
             Console.WriteLine($"Final Cash: ${prevCash}");
             Console.WriteLine($"Stocks Owned: {prevStocks}");
             Console.WriteLine($"Net Worth: ${prevNetWorth}");
 
-            if (prevNetWorth > finalWorth){
+            if (prevNetWorth > finalWorth) {
                 Console.WriteLine("You did not beat your previous Final Net Worth.");
                 Console.WriteLine("Booooooo!!!!! Maybe next time. :(");
                 Console.WriteLine("----------------------------------------");
             }
 
-            else{
+            else {
                 Console.WriteLine("You did beat your previous Final Net Worth!!!!!!");
                 Console.WriteLine("Great job!!!!! I'm so proud of you. You're becoming the best stock buying in the world!!!!!");
                 Console.WriteLine("----------------------------------------");
             }
         }
+        if (finalWorth > 1000) {
+            Console.WriteLine("You win!!");
+            Console.WriteLine($"Your final networth of ${finalWorth} was higher than the starting networth of $1,000.");
+        }
+        else {
+            Console.WriteLine("You lose!!");
+            Console.WriteLine($"Your final networth of ${finalWorth} was was than the starting networth of $1,000.");
+        }
+
+        Console.WriteLine($"Highscore: {highscore}");
 
         Console.WriteLine($"Press R to play again and try to beat your net worth or Q to quit.");
         Console.WriteLine("----------------------------------------");
 
-        while (true){
+        while (true) {
             var key = Console.ReadKey(true).Key;
             if (key == ConsoleKey.R) {
                 prevGame = true;
@@ -152,69 +180,88 @@ class Program{
             }
         }
     }
-
-
-    static void Main(string[] args){
-        IntroScreen();
-        StatsUI();
+    
+    static void GamePlay() {
         gameRunning = true;
-
+        Console.Clear();
+        UpdateStockPrice();
+        StatsUI();
         while (gameRunning){
-            Thread.Sleep(2000);
-            time += 2;
-
-            UpdateStockPrice();
-            StatsUI();
-             
-            if (time >= 960){
+            if (time >= 960) {
                 EndScreen();
                 continue;
             }
-            if (Console.KeyAvailable) {
-                switch (Console.ReadKey(true).Key) {
-                    case ConsoleKey.Escape:
-                        PauseScreen();
-                        break;
-                    case ConsoleKey.R:
-                        ResetGame();
-                        break;
-                    case ConsoleKey.Q:
-                        EndScreen();
-                        break;
-                    case ConsoleKey.B:
-                        Console.WriteLine("How many stocks would you like to buy: ");
-                        num = int.Parse(Console.ReadLine());
+            ConsoleKey key = Console.ReadKey(true).Key;
+            Console.WriteLine("");
+            switch (key) {
+                case ConsoleKey.Escape:
+                    PauseScreen();
+                    break;
+                case ConsoleKey.R:
+                    ResetGame();
+                    break;
+                case ConsoleKey.Q:
+                    EndScreen();
+                    break;
+                case ConsoleKey.B:
+                    Console.Write("How many stocks would you like to buy: ");
+                    string? input = Console.ReadLine();
+                    if (int.TryParse(input, out num)) {
                         if (cash >= num * price) {
                             cash -= num * price;
                             stocks += num;
                         }
                         else {
-                            num = price / cash;
+                            num = cash / price;
                             Console.WriteLine($"You only have enough cash for {num} stocks.");
                             cash -= num * price;
                             stocks += num;
                         }
-                        Console.WriteLine($"Successfully bought {num} stocks for {price} each!");
-                        break;
+                        Console.WriteLine($"Successfully bought {num} stocks at ${price} each!");
+                    }
+                    time += 60;
+                    UpdateStockPrice();
+                    StatsUI();
+                    break;
 
-                    case ConsoleKey.S:
-                        Console.WriteLine("How many stocks would you like to sell: ");
-                        num = int.Parse(Console.ReadLine());
-                        if (stocks >= num) {
+
+                case ConsoleKey.S:
+                    Console.Write("How many stocks would you like to sell: ");
+                    input = Console.ReadLine();
+                    if (int.TryParse(input, out num)) {
+                        if (stocks <= num) {
                             cash += num * price;
                             stocks -= num;
                         }
                         else {
                             num = stocks;
-                            Console.WriteLine($"You only have {stocks} stocks.");
+                            Console.WriteLine($"You only have enough stocks to sell {stocks} stocks.");
                             cash += num * price;
                             stocks = 0;
                         }
-                        Console.WriteLine($"Successfully sold {num} stocks for {price} each!");
-                        break;
-                }
+                        Console.WriteLine($"Successfully sold {num} stocks at ${price} each!");
+                        time += 60;
+                        UpdateStockPrice();
+                        StatsUI();
+                    }
+                    break;
+
+                case ConsoleKey.N:
+                    time += 60;
+                    UpdateStockPrice();
+                    StatsUI();
+                    break;
             }
-            Thread.Sleep(100); 
+            Thread.Sleep(1000);   
+        }
+    }
+
+
+    static void Main(string[] args){
+        while(true){
+            IntroScreen();
+            Console.Clear();
+            GamePlay();
         }
     }
 }

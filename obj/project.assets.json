@@ -13,11 +13,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/allyssa/Library/Mobile Documents/com~apple~CloudDocs/CSCI310/project3/csharp_project3.csproj",
+      "projectUniqueName": "/Users/allyssa/Library/Mobile Documents/com~apple~CloudDocs/CSCI310/C-onsumerism_Sharp_Market/csharp_project3.csproj",
       "projectName": "csharp_project3",
-      "projectPath": "/Users/allyssa/Library/Mobile Documents/com~apple~CloudDocs/CSCI310/project3/csharp_project3.csproj",
+      "projectPath": "/Users/allyssa/Library/Mobile Documents/com~apple~CloudDocs/CSCI310/C-onsumerism_Sharp_Market/csharp_project3.csproj",
       "packagesPath": "/Users/allyssa/.nuget/packages/",
-      "outputPath": "/Users/allyssa/Library/Mobile Documents/com~apple~CloudDocs/CSCI310/project3/obj/",
+      "outputPath": "/Users/allyssa/Library/Mobile Documents/com~apple~CloudDocs/CSCI310/C-onsumerism_Sharp_Market/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "/Users/allyssa/.nuget/NuGet/NuGet.Config"
