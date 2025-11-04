@@ -59,6 +59,7 @@ class Program{
         Console.WriteLine($"Net Worth: ${netWorth}");
         Console.WriteLine("----------------------------------------");
         Console.WriteLine("[B] - Buy [S] - Sell [N] - Skip [R] - Restart [ESC] - Pause [Q] - Quit");
+        
     }
 
     static void UpdateStockPrice(){
@@ -86,7 +87,6 @@ class Program{
             
         }
         Console.WriteLine($"Stock prices are now {price}.");
-        Thread.Sleep(1000);
     }
 
     static void PauseScreen() {
@@ -191,7 +191,7 @@ class Program{
                 EndScreen();
                 continue;
             }
-            ConsoleKey key = Console.ReadKey(true).Key;
+            ConsoleKey key = Console.ReadKey(false).Key;
             Console.WriteLine("");
             switch (key) {
                 case ConsoleKey.Escape:
