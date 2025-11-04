@@ -55,9 +55,8 @@ class Program{
         else { Console.WriteLine($"Time: {(time / 60 % 12)}:{time % 60:D2}AM"); }
         Console.WriteLine($"Money: ${cash}");
         Console.WriteLine($"Stocks Owned: {stocks}");
-        //Console.WriteLine($"Current Price: ${price}");
         if (netWorth <= 1000) { Console.ForegroundColor = ConsoleColor.Red; }
-        else{ Console.ForegroundColor = ConsoleColor.Red; }
+        else{ Console.ForegroundColor = ConsoleColor.Green; }
         Console.WriteLine($"Net Worth: ${netWorth}");
         Console.ResetColor();
         Console.WriteLine("----------------------------------------");
@@ -66,7 +65,6 @@ class Program{
     }
 
     static void UpdateStockPrice(){
-        Console.Clear();
         int change = rand.Next(-10, 11);
         price += change;
         if (price < 1) { price = 1; }
@@ -198,74 +196,93 @@ class Program{
         Console.Clear();
         UpdateStockPrice();
         StatsUI();
-        while (gameRunning){
+        while (gameRunning) {
             if (time >= 960) {
                 EndScreen();
                 continue;
             }
-            ConsoleKey key = Console.ReadKey(false).Key;
-            Console.WriteLine("");
-            switch (key) {
-                case ConsoleKey.Escape:
-                    PauseScreen();
-                    break;
-                case ConsoleKey.R:
-                    ResetGame();
-                    break;
-                case ConsoleKey.Q:
-                    EndScreen();
-                    break;
-                case ConsoleKey.B:
-                    Console.Write("How many stocks would you like to buy: ");
-                    string? input = Console.ReadLine();
-                    if (int.TryParse(input, out num)) {
-                        if (cash >= num * price) {
-                            cash -= num * price;
-                            stocks += num;
-                        }
-                        else {
-                            num = cash / price;
-                            Console.WriteLine($"You only have enough cash for {num} stocks.");
-                            cash -= num * price;
-                            stocks += num;
-                        }
-                        Console.WriteLine($"Successfully bought {num} stocks at ${price} each!");
+            DateTime startWait = DateTime.Now;
+            bool gotInput = false;
+
+            // Wait up to 5 seconds for input
+            while ((DateTime.Now - startWait).TotalSeconds < 5) {
+                if (Console.KeyAvailable) {
+                    ConsoleKey key = Console.ReadKey(true).Key;
+                    Console.WriteLine("");
+                    switch (key) {
+                        case ConsoleKey.Escape:
+                            PauseScreen();
+                            break;
+                        case ConsoleKey.R:
+                            ResetGame();
+                            break;
+                        case ConsoleKey.Q:
+                            EndScreen();
+                            break;
+                        case ConsoleKey.B:
+                            Console.Write("How many stocks would you like to buy: ");
+                            string? input = Console.ReadLine();
+                            if (int.TryParse(input, out num)) {
+                                if (cash >= num * price) {
+                                    cash -= num * price;
+                                    stocks += num;
+                                }
+                                else {
+                                    num = cash / price;
+                                    Console.WriteLine($"You only have enough cash for {num} stocks.");
+                                    cash -= num * price;
+                                    stocks += num;
+                                }
+                                Console.WriteLine($"Successfully bought {num} stocks at ${price} each!");
+                            }
+                            time += 60;
+                            UpdateStockPrice();
+                            StatsUI();
+                            break;
+
+
+                        case ConsoleKey.S:
+                            Console.Write("How many stocks would you like to sell: ");
+                            input = Console.ReadLine();
+                            if (int.TryParse(input, out num)) {
+                                if (stocks <= num) {
+                                    cash += num * price;
+                                    stocks -= num;
+                                }
+                                else {
+                                    num = stocks;
+                                    Console.WriteLine($"You only have enough stocks to sell {stocks} stocks.");
+                                    cash += num * price;
+                                    stocks = 0;
+                                }
+                                Console.WriteLine($"Successfully sold {num} stocks at ${price} each!");
+                                time += 60;
+                                UpdateStockPrice();
+                                StatsUI();
+                            }
+                            break;
+
+                        case ConsoleKey.N:
+                            time += 60;
+                            UpdateStockPrice();
+                            StatsUI();
+                            break;
                     }
-                    time += 60;
-                    UpdateStockPrice();
-                    StatsUI();
+                    gotInput = true;
                     break;
-
-
-                case ConsoleKey.S:
-                    Console.Write("How many stocks would you like to sell: ");
-                    input = Console.ReadLine();
-                    if (int.TryParse(input, out num)) {
-                        if (stocks <= num) {
-                            cash += num * price;
-                            stocks -= num;
-                        }
-                        else {
-                            num = stocks;
-                            Console.WriteLine($"You only have enough stocks to sell {stocks} stocks.");
-                            cash += num * price;
-                            stocks = 0;
-                        }
-                        Console.WriteLine($"Successfully sold {num} stocks at ${price} each!");
-                        time += 60;
-                        UpdateStockPrice();
-                        StatsUI();
-                    }
-                    break;
-
-                case ConsoleKey.N:
-                    time += 60;
-                    UpdateStockPrice();
-                    StatsUI();
-                    break;
+                }
             }
-            Thread.Sleep(1000);   
+            if (!gotInput) {
+                Console.ForegroundColor = ConsoleColor.DarkGray;
+                Console.WriteLine("You didn't make a move. Stock market updated.");
+                Console.ResetColor();
+                time += 60;
+                Thread.Sleep(1000);
+                UpdateStockPrice();
+                StatsUI();
+            }
         }
+        
     }
 
 
