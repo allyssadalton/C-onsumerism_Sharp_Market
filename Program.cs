@@ -56,7 +56,10 @@ class Program{
         Console.WriteLine($"Money: ${cash}");
         Console.WriteLine($"Stocks Owned: {stocks}");
         //Console.WriteLine($"Current Price: ${price}");
+        if (netWorth <= 1000) { Console.ForegroundColor = ConsoleColor.Red; }
+        else{ Console.ForegroundColor = ConsoleColor.Red; }
         Console.WriteLine($"Net Worth: ${netWorth}");
+        Console.ResetColor();
         Console.WriteLine("----------------------------------------");
         Console.WriteLine("[B] - Buy [S] - Sell [N] - Skip [R] - Restart [ESC] - Pause [Q] - Quit");
         
@@ -71,18 +74,22 @@ class Program{
         if (chaoticEventChance == 1) {
             int spike = rand.Next(20, 40);
             price += spike;
+            Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine($"Stock Prices Spiked!! They increased by ${spike}.");
+            Console.ResetColor();
         }
 
         else if (chaoticEventChance == 2) {
             int drop = rand.Next(20, 40);
             if (drop > price) {
-                Console.WriteLine($"Stock Prices Crashed!!");
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine($"Stock Prices Crashed!!");   
                 price = 1;
             }
             else {
                 price -= drop;
-            Console.WriteLine($"Stock Prices Crashed!! They decreased by ${drop}.");
+                Console.WriteLine($"Stock Prices Crashed!! They decreased by ${drop}.");
+                Console.ResetColor();
             }
             
         }
@@ -151,12 +158,17 @@ class Program{
             }
         }
         if (finalWorth > 1000) {
+            Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("You win!!");
             Console.WriteLine($"Your final networth of ${finalWorth} was higher than the starting networth of $1,000.");
+            Console.ResetColor();
         }
         else {
-            Console.WriteLine("You lose!!");
-            Console.WriteLine($"Your final networth of ${finalWorth} was less than the starting networth of $1,000.");
+            Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("You lose!!");
+                Console.WriteLine($"Your final networth of ${finalWorth} was less than the starting networth of $1,000.");
+            Console.ResetColor();
+
         }
 
         Console.WriteLine($"Highscore: ${highscore}");
@@ -257,8 +269,9 @@ class Program{
     }
 
 
-    static void Main(string[] args){
-        while(true){
+
+    static void Main(string[] args) {
+        while (true) {
             IntroScreen();
             Console.Clear();
             GamePlay();
