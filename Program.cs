@@ -3,7 +3,7 @@ using System;
 using System.Threading;
 
 class Program{
-    static bool gameRunning = false;
+    static bool gameRunning = true;
     static bool gamePaused = false;
     static int price = 50;
     static int cash = 1000;
@@ -85,8 +85,10 @@ class Program{
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine($"Stock Prices Crashed!!");   
                 price = 1;
+                Console.ResetColor();
             }
             else {
+                Console.ForegroundColor = ConsoleColor.Red;
                 price -= drop;
                 Console.WriteLine($"Stock Prices Crashed!! They decreased by ${drop}.");
                 Console.ResetColor();
@@ -121,8 +123,14 @@ class Program{
         GamePlay();
     }
 
-    static void EndScreen() {
+    static void EndScreen(bool Quit = false) {
         int finalWorth = cash + (stocks * price);
+        if (Quit == true) {
+            Console.WriteLine($"Final Cash: ${cash}");
+            Console.WriteLine($"Stocks Owned: {stocks}");
+            Console.WriteLine($"Net Worth: ${finalWorth}");
+            Environment.Exit(0);
+        }
         Console.WriteLine("----------------------------------------");
         Console.WriteLine("Time: 4:00pm");
         Console.WriteLine("Sharp Street is now closed.");
@@ -188,13 +196,13 @@ class Program{
             }
             else if (key == ConsoleKey.Q) {
                 gameRunning = false;
-                break;
+                Environment.Exit(0);
+               break;
             }
         }
     }
     
     static void GamePlay() {
-        gameRunning = true;
         Console.Clear();
         UpdateStockPrice();
         StatsUI();
@@ -219,7 +227,7 @@ class Program{
                             ResetGame();
                             break;
                         case ConsoleKey.Q:
-                            EndScreen();
+                            EndScreen(true);
                             break;
                         case ConsoleKey.B:
                             Console.Write("How many stocks would you like to buy: ");
