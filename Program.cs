@@ -66,6 +66,8 @@ class Program{
 
     static void UpdateStockPrice(){
         int change = rand.Next(-10, 11);
+
+        Console.WriteLine("");
         price += change;
         if (price < 1) { price = 1; }
         int chaoticEventChance = rand.Next(1, 20);
@@ -282,7 +284,6 @@ class Program{
                 StatsUI();
             }
         }
-        
     }
 
 
